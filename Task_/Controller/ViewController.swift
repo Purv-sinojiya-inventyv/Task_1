@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var emailTextField: UITextField!
     @IBOutlet private weak var passwordTextField: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
     @IBOutlet private weak var errorLabel: UILabel!
     
     override func viewDidLoad() {
@@ -98,5 +99,15 @@ class ViewController: UIViewController {
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            emailTextField.center = view.center
+            passwordTextField.center = CGPoint(x: view.center.x, y: view.center.y + 50)
+            loginButton.center = CGPoint(x: view.center.x, y: view.center.y + 100)
+        }
+    }
+
 
      }
