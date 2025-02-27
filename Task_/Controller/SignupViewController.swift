@@ -94,5 +94,5 @@ class SignupViewController: UIViewController {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: date)
     }
-    
+   
 }

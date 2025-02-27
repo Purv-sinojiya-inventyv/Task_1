@@ -20,6 +20,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet private weak var errorLabel: UILabel!
     
+    @IBOutlet weak var Passworlabel: UILabel!
+    @IBOutlet weak var EmailLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         errorLabel.isHidden = true // Hide error label initially
@@ -99,15 +102,9 @@ class ViewController: UIViewController {
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            emailTextField.center = view.center
-            passwordTextField.center = CGPoint(x: view.center.x, y: view.center.y + 50)
-            loginButton.center = CGPoint(x: view.center.x, y: view.center.y + 100)
-        }
+
+
     }
 
 
-     }
+     
