@@ -2,14 +2,17 @@ import UIKit
 
 class SignupViewController: UIViewController {
     
-    @IBOutlet weak var firstNameTextField: UITextField!
-    @IBOutlet weak var lastNameTextField: UITextField!
-    @IBOutlet weak var genderBtn: UIButton!
+    @IBOutlet weak var txtFirstname: UILabel!
+  
+   
+    @IBOutlet weak var txtLastname: UITextField!
+    
+    @IBOutlet weak var btnGender: UIButton!
     @IBOutlet weak var dateOfBirth: UIDatePicker!
    
-    @IBOutlet weak var heightTextField: UITextField!
+    @IBOutlet weak var txtHeight: UITextField!
    
-    @IBOutlet weak var saveBtn: UIButton!
+    @IBOutlet weak var btnSave: UIButton!
     
     
     
@@ -26,18 +29,18 @@ class SignupViewController: UIViewController {
     
     private func formatDate(){
         if let firstName = firstName{
-            firstNameTextField.text = firstName
+            txtFirstname.text = firstName
         }
         
         if let lastName = lastName{
-            lastNameTextField.text = lastName
+            txtLastname.text = lastName
         }
         
         if let gender = gender{
-            genderBtn.setTitle(gender, for: .normal)
+            btnGender.setTitle(gender, for: .normal)
         }
         if let height = height{
-            heightTextField.text = String(height)
+            txtHeight.text = String(height)
         }
         
         if let dobString = self.dob {
@@ -53,14 +56,14 @@ class SignupViewController: UIViewController {
     }
     
     @IBAction func onGenderBtnClick(_ sender: UIAction) {
-        genderBtn.setTitle(sender.title, for: .normal)
+        btnGender.setTitle(sender.title, for: .normal)
     }
     
     @IBAction func onSaveBtnClick(_ sender: UIButton) {
-        guard let firstName = firstNameTextField.text, !firstName.isEmpty,
-              let lastName = lastNameTextField.text, !lastName.isEmpty,
-              let gender = genderBtn.titleLabel?.text,
-              let height = Double(heightTextField.text ?? "") else {
+        guard let firstName = txtFirstname.text, !firstName.isEmpty,
+              let lastName = txtLastname.text, !lastName.isEmpty,
+              let gender = btnGender.titleLabel?.text,
+              let height = Double(txtHeight.text ?? "") else {
             print("Validation failed: Missing required fields")
             return
         }
@@ -70,7 +73,7 @@ class SignupViewController: UIViewController {
         
      
         
-        saveBtn.titleLabel?.text = "Saving..."
+        btnSave.titleLabel?.text = "Saving..."
         
         if DatabaseHelper.shared.insertUser(firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dobString, height:height ){
             print("Success")
@@ -81,7 +84,7 @@ class SignupViewController: UIViewController {
     
     private func handleSuccess(){
         DispatchQueue.main.async {
-            self.saveBtn.titleLabel?.text = "Save"
+            self.btnSave.titleLabel?.text = "Save"
             let alert = UIAlertController(title: "Status", message: "Your data saved successfully", preferredStyle: .alert)
             let cancelBtn = UIAlertAction(title: "Cancel", style: .cancel)
             alert.addAction(cancelBtn)

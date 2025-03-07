@@ -13,19 +13,16 @@ import UIKit
 // Define API Response Model
 
 
-class ViewController: UIViewController {
+class LoginViewController: UIViewController {
     
-    @IBOutlet private weak var emailTextField: UITextField!
-    @IBOutlet private weak var passwordTextField: UITextField!
-    @IBOutlet weak var loginButton: UIButton!
-    @IBOutlet private weak var errorLabel: UILabel!
-    
-    @IBOutlet weak var Passworlabel: UILabel!
-    @IBOutlet weak var EmailLabel: UILabel!
+    @IBOutlet private weak var txtEmail: UITextField!
+    @IBOutlet private weak var txtPassword: UITextField!
+    @IBOutlet weak var btnLogin: UIButton!
+    @IBOutlet private weak var txtError: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        errorLabel.isHidden = true // Hide error label initially
+        txtError.isHidden = true // Hide error label initially
     }
 
     @IBAction private func loginButtonTapped(_ sender: UIButton) {
@@ -33,8 +30,8 @@ class ViewController: UIViewController {
     }
     
     private func validateLogin() {
-        guard let email = emailTextField.text, !email.isEmpty,
-              let password = passwordTextField.text, !password.isEmpty else {
+        guard let email = txtEmail.text, !email.isEmpty,
+              let password = txtPassword.text, !password.isEmpty else {
             showError("Email and Password cannot be empty")
             return
         }
@@ -51,7 +48,7 @@ class ViewController: UIViewController {
             return
         }
         
-        errorLabel.isHidden = true
+        txtError.isHidden = true
         print("Login Successful for: \(email)")
 
         // Create UserModel instance with dynamic email & password
@@ -67,7 +64,7 @@ class ViewController: UIViewController {
                 switch result {
                 case .success(let responseData):
                     print("API Success: \(responseData)")
-                    // ✅ Navigate to the next screen on success
+                   
                     DispatchQueue.main.async {
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
                         if let signupVC = storyboard.instantiateViewController(withIdentifier: "SignupViewController") as? SignupViewController {
@@ -93,8 +90,8 @@ class ViewController: UIViewController {
     }
     
     private func showError(_ message: String) {
-        errorLabel.text = message
-        errorLabel.isHidden = false
+        txtError.text = message
+        txtError.isHidden = false
     }
     
     private func isValidEmail(_ email: String) -> Bool {
