@@ -2,7 +2,7 @@ import Foundation
 
 func fetchData(user: UserModel, completion: @escaping (Result<Welcome, Error>) -> Void) {
     
-    guard let url = URL(string: "") else {  // ✅ Replace with actual API URL
+    guard let url = URL(string: "https://test-hmsync.connect-beurer.com/BHMCWebAPI/User/GetValidateUser") else {  // ✅ Replace with actual API URL
         let error = NSError(domain: "", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
         completion(.failure(error))
         return

@@ -1,17 +1,4 @@
-//
-//  ViewController.swift
-//  Assignment_1
-//
-//  Created by Purv Sinojiya on 25/02/25.
-//
-
 import UIKit
-
-// Define User Model
-
-
-// Define API Response Model
-
 
 class LoginViewController: UIViewController {
     
@@ -36,13 +23,11 @@ class LoginViewController: UIViewController {
             return
         }
         
-        // Email format validation
         if !isValidEmail(email) {
             showError("Invalid email format")
             return
         }
         
-        // Password length validation
         if password.count < 6 {
             showError("Password must be at least 6 characters")
             return
@@ -51,42 +36,65 @@ class LoginViewController: UIViewController {
         txtError.isHidden = true
         print("Login Successful for: \(email)")
 
-        // Create UserModel instance with dynamic email & password
         let user = UserModel(
             userName: email,
             password: password,
-            softwareType: "AN",  // Static Value
-            releaseVersion: "049" // Static Value
+            softwareType: "AN",
+            releaseVersion: "049"
         )
-          //
+
         Task {
-             fetchData(user: user) { result in
+            fetchData(user: user) { result in
                 switch result {
                 case .success(let responseData):
-                    print("API Success: \(responseData)")
-                   
+                    print("✅ API Success: \(responseData)")
                     DispatchQueue.main.async {
+                        let firstName = responseData.firstName ?? ""
+                        print("📝 Data Received:")
+                        print("   - First Name: \(firstName.isEmpty ? "❌ Missing" : firstName)")
+                        let lastName = responseData.lastName ?? ""
+                        print("   - Last Name: \(lastName.isEmpty ? "❌ Missing" : lastName)")
+                        let dob = responseData.dob ?? ""
+                        print("   - DOB: \(dob.isEmpty ? "❌ Missing" : dob)")
+                        let gender = responseData.gender == 1 ? "Male" : "Female"
+                        print("   - Gender: \(gender.isEmpty ? "❌ Missing" : gender)")
+                        let height = Double(responseData.heightCM ?? 0)
+                        print("   - Height: \(height == 0 ? "❌ Missing" : "\(height) cm")")
+
+                        // Debugging: Print which data is missing
+                       
+                     
+                      
+                      
+                       
+
+                        if DatabaseHelper.shared.insertUser(email: email, password: password, firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dob, height: height) {
+                            print("✅ User data saved successfully in SQLite")
+                        } else {
+                            print("❌ Failed to save user data in SQLite")
+                        }
+
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
                         if let signupVC = storyboard.instantiateViewController(withIdentifier: "SignupViewController") as? SignupViewController {
-                            signupVC.firstName=responseData.firstName
-                            signupVC.lastName=responseData.lastName
-                            signupVC.dob=responseData.dob
-                            signupVC.gender = responseData.gender == 1 ? "Male" : "Female"
-                            signupVC.height = Double(responseData.heightCM ?? 0)
+                            signupVC.firstName = firstName
+                            signupVC.lastName = lastName
+                            signupVC.dob = dob
+                            signupVC.gender = gender
+                            signupVC.height = height
                             self.navigationController?.pushViewController(signupVC, animated: true)
+                        } else {
+                            print("❌ Failed to instantiate SignupViewController")
                         }
                     }
-                    
+
                 case .failure(let error):
-                    print("API Failure: \(error.localizedDescription)")
-                    // ✅ Show an error alert
+                    print("❌ API Failure: \(error.localizedDescription)")
                     DispatchQueue.main.async {
                         self.showError("Failed to fetch data: \(error.localizedDescription)")
                     }
                 }
             }
         }
-
     }
     
     private func showError(_ message: String) {
@@ -99,9 +107,4 @@ class LoginViewController: UIViewController {
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
-
-
-    }
-
-
-     
+}

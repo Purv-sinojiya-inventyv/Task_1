@@ -79,16 +79,24 @@
                                     <color key="baseBackgroundColor" systemColor="tintColor"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <action selector="loginButtonTapped:" destination="GXm-gc-WP2" eventType="touchUpInside" id="fOo-NV-4Js"/>
+                                    <action selector="loginButtonTapped:" destination="GXm-gc-WP2" eventType="touchUpInside" id="v3M-iE-JUS"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kOR-IC-uNa">
+                                <rect key="frame" x="199" y="871" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="U2Q-61-EEo"/>
                         <color key="backgroundColor" systemColor="labelColor"/>
                         <constraints>
                             <constraint firstItem="U2Q-61-EEo" firstAttribute="trailing" secondItem="ac2-ad-enf" secondAttribute="trailing" constant="52" id="0hM-aq-vgQ"/>
+                            <constraint firstItem="kOR-IC-uNa" firstAttribute="centerX" secondItem="gOT-3R-Qb8" secondAttribute="centerX" id="4JP-jg-oSO"/>
                             <constraint firstItem="Hxr-MC-61f" firstAttribute="leading" secondItem="U2Q-61-EEo" secondAttribute="leading" constant="52" id="Hlt-8C-iGG"/>
                             <constraint firstItem="ac2-ad-enf" firstAttribute="top" secondItem="zXp-wO-cwY" secondAttribute="bottom" constant="34" id="KmR-sI-c05"/>
+                            <constraint firstItem="U2Q-61-EEo" firstAttribute="bottom" secondItem="kOR-IC-uNa" secondAttribute="bottom" constant="30" id="MBb-Be-h3o"/>
                             <constraint firstItem="p7z-LX-mHc" firstAttribute="leading" secondItem="U2Q-61-EEo" secondAttribute="leading" constant="52" id="QJB-gk-vKw"/>
                             <constraint firstItem="U2Q-61-EEo" firstAttribute="trailing" secondItem="p7z-LX-mHc" secondAttribute="trailing" constant="52" id="VTD-9F-Q4q"/>
                             <constraint firstItem="6Vy-Qv-rLv" firstAttribute="top" secondItem="p7z-LX-mHc" secondAttribute="bottom" constant="93" id="dJq-k3-vEa"/>
@@ -103,12 +111,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="bOT-Rg-VIG"/>
                     <connections>
-                        <outlet property="EmailLabel" destination="zXp-wO-cwY" id="wMf-ux-BeS"/>
-                        <outlet property="Passworlabel" destination="Hxr-MC-61f" id="pSJ-GS-e2M"/>
-                        <outlet property="emailTextField" destination="ac2-ad-enf" id="m7k-jB-Jb8"/>
-                        <outlet property="errorLabel" destination="H6O-xC-gCv" id="vPK-rz-R9A"/>
-                        <outlet property="loginButton" destination="6Vy-Qv-rLv" id="cTC-Hs-fO1"/>
-                        <outlet property="passwordTextField" destination="p7z-LX-mHc" id="MFv-25-bMd"/>
+                        <outlet property="btnLogin" destination="6Vy-Qv-rLv" id="fqo-Jw-epO"/>
+                        <outlet property="txtEmail" destination="ac2-ad-enf" id="qIX-Yx-awP"/>
+                        <outlet property="txtError" destination="kOR-IC-uNa" id="fok-qi-WcS"/>
+                        <outlet property="txtPassword" destination="p7z-LX-mHc" id="irF-OV-5wS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iyp-Mr-AHw" sceneMemberID="firstResponder"/>
@@ -194,6 +200,9 @@
                                 <buttonConfiguration key="configuration" style="plain" image="circle" catalog="system" title=" Male">
                                     <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="onGenderMaleClick:" destination="THN-Dg-VFb" eventType="touchUpInside" id="KdJ-Qp-f8M"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fbR-ki-5pV">
                                 <rect key="frame" x="88" y="460" width="264" height="36"/>
@@ -209,6 +218,9 @@
                                 <buttonConfiguration key="configuration" style="plain" image="circle" catalog="system" title="Female">
                                     <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="onGenderFemaleClick:" destination="THN-Dg-VFb" eventType="touchUpInside" id="Tpw-En-N5C"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bhc-C5-wwW"/>
@@ -265,6 +277,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="btnGenderFemale" destination="IeN-62-co4" id="fWE-g1-9iW"/>
+                        <outlet property="btnGenderMale" destination="eY3-WQ-kYt" id="xIg-fa-awp"/>
                         <outlet property="btnSave" destination="fbR-ki-5pV" id="0mA-C6-w5p"/>
                         <outlet property="dateOfBirth" destination="kpg-L0-hAz" id="CrF-pI-E4d"/>
                         <outlet property="txtFirstname" destination="ovw-z2-nox" id="r5A-VW-tEP"/>
