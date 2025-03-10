@@ -56,7 +56,7 @@ final class DatabaseHelper {
         let query = "SELECT email FROM Users WHERE email = ?;"
         var statement: OpaquePointer?
         var exists = false
-
+        let email = email.cString(using: .utf8)
         if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
             sqlite3_bind_text(statement, 1, email, -1, nil)
 
@@ -165,7 +165,11 @@ final class DatabaseHelper {
         
         var statement: OpaquePointer?
         var success = false
-
+        let email = email.cString(using: .utf8)
+        let firstName = firstName.cString(using: .utf8)
+        let lastName = lastName.cString(using: .utf8)
+        let dateOfBirth = dateOfBirth.cString(using: .utf8)
+        let gender = gender.cString(using: .utf8)
         if sqlite3_prepare_v2(db, updateQuery, -1, &statement, nil) == SQLITE_OK {
             sqlite3_bind_text(statement, 1, firstName, -1, nil)
             sqlite3_bind_text(statement, 2, lastName, -1, nil)
