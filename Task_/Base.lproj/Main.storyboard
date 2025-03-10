@@ -79,7 +79,7 @@
                                     <color key="baseBackgroundColor" systemColor="tintColor"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <action selector="loginButtonTapped:" destination="GXm-gc-WP2" eventType="touchUpInside" id="v3M-iE-JUS"/>
+                                    <action selector="loginButtonTapped:" destination="GXm-gc-WP2" eventType="touchUpInside" id="syM-N2-qak"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kOR-IC-uNa">
@@ -111,10 +111,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="bOT-Rg-VIG"/>
                     <connections>
-                        <outlet property="btnLogin" destination="6Vy-Qv-rLv" id="fqo-Jw-epO"/>
-                        <outlet property="txtEmail" destination="ac2-ad-enf" id="qIX-Yx-awP"/>
-                        <outlet property="txtError" destination="kOR-IC-uNa" id="fok-qi-WcS"/>
-                        <outlet property="txtPassword" destination="p7z-LX-mHc" id="irF-OV-5wS"/>
+                        <outlet property="btnLogin" destination="6Vy-Qv-rLv" id="Kbj-P1-FKp"/>
+                        <outlet property="txtEmail" destination="ac2-ad-enf" id="mNi-hP-Ua3"/>
+                        <outlet property="txtError" destination="kOR-IC-uNa" id="W6W-5M-lPF"/>
+                        <outlet property="txtPassword" destination="p7z-LX-mHc" id="0Ju-BG-iwY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iyp-Mr-AHw" sceneMemberID="firstResponder"/>

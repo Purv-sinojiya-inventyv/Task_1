@@ -17,6 +17,7 @@ class LoginViewController: UIViewController {
     }
     
     private func validateLogin() {
+        print("dhighih")
         guard let email = txtEmail.text, !email.isEmpty,
               let password = txtPassword.text, !password.isEmpty else {
             showError("Email and Password cannot be empty")
@@ -37,10 +38,15 @@ class LoginViewController: UIViewController {
         print("Login Successful for: \(email)")
 
         let user = UserModel(
-            userName: email,
-            password: password,
+            userName: email, password: password,
             softwareType: "AN",
-            releaseVersion: "049"
+            releaseVersion: "049",
+            email: email,
+            firstName: "",
+            lastName: "",
+            gender: "",
+            dateOfBirth: "",
+            height: 0.0
         )
 
         Task {
@@ -50,41 +56,26 @@ class LoginViewController: UIViewController {
                     print("✅ API Success: \(responseData)")
                     DispatchQueue.main.async {
                         let firstName = responseData.firstName ?? ""
-                        print("📝 Data Received:")
-                        print("   - First Name: \(firstName.isEmpty ? "❌ Missing" : firstName)")
                         let lastName = responseData.lastName ?? ""
-                        print("   - Last Name: \(lastName.isEmpty ? "❌ Missing" : lastName)")
                         let dob = responseData.dob ?? ""
-                        print("   - DOB: \(dob.isEmpty ? "❌ Missing" : dob)")
                         let gender = responseData.gender == 1 ? "Male" : "Female"
-                        print("   - Gender: \(gender.isEmpty ? "❌ Missing" : gender)")
                         let height = Double(responseData.heightCM ?? 0)
-                        print("   - Height: \(height == 0 ? "❌ Missing" : "\(height) cm")")
+                        print(firstName)
+                        print(lastName)
+                        print(dob)
+                        print(gender)
+                        print(height)
+                        print("dfnknkdfhkgkhkfhgkfhkg")
 
-                        // Debugging: Print which data is missing
-                       
-                     
-                      
-                      
-                       
-
-                        if DatabaseHelper.shared.insertUser(email: email, password: password, firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dob, height: height) {
+                        // Store user data in SQLite
+                        if DatabaseHelper.shared.insertOrUpdateUser(email: email, password: password, firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dob, height: height) {
                             print("✅ User data saved successfully in SQLite")
+                            UserDefaults.standard.set(email, forKey: "user_email")
+                            self.navigateToSignupScreen()
                         } else {
                             print("❌ Failed to save user data in SQLite")
                         }
 
-                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                        if let signupVC = storyboard.instantiateViewController(withIdentifier: "SignupViewController") as? SignupViewController {
-                            signupVC.firstName = firstName
-                            signupVC.lastName = lastName
-                            signupVC.dob = dob
-                            signupVC.gender = gender
-                            signupVC.height = height
-                            self.navigationController?.pushViewController(signupVC, animated: true)
-                        } else {
-                            print("❌ Failed to instantiate SignupViewController")
-                        }
                     }
 
                 case .failure(let error):
@@ -96,7 +87,16 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    
+
+    private func navigateToSignupScreen() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let signupVC = storyboard.instantiateViewController(withIdentifier: "SignupViewController") as? SignupViewController {
+            self.navigationController?.pushViewController(signupVC, animated: true)
+        } else {
+            print("❌ Failed to instantiate SignupViewController")
+        }
+    }
+
     private func showError(_ message: String) {
         txtError.text = message
         txtError.isHidden = false
