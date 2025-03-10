@@ -18,21 +18,21 @@ class SignupViewController: UIViewController {
 
         email = UserDefaults.standard.string(forKey: "user_email")
         if let email = email {
-            print("📧 Fetched email from UserDefaults: \(email)")
+            print(" Fetched email from UserDefaults: \(email)")
             user = DatabaseHelper.shared.fetchUser(byEmail: email)
             setupUI()
         } else {
-            print("❌ No user email found in UserDefaults")
+            print(" No user email found in UserDefaults")
         }
     }
 
     private func setupUI() {
         guard let user = user else {
-            print("❌ User not found in database")
+            print(" User not found in database")
             return
         }
 
-        print("✅ Loaded User: \(user.firstName) \(user.lastName) | Gender: \(user.gender) | DOB: \(user.dateOfBirth)")
+        print(" Loaded User: \(user.firstName) \(user.lastName) | Gender: \(user.gender) | DOB: \(user.dateOfBirth)")
 
         txtFirstname.text = user.firstName
         txtLastname.text = user.lastName
@@ -45,21 +45,43 @@ class SignupViewController: UIViewController {
         if let date = dateFormatter.date(from: dobString) {
             dateOfBirth.date = date
         }
+        dateOfBirth.tintColor = .white // Works for some iOS versions
+
+        // Force set the text color to white
+        dateOfBirth.setValue(UIColor.white, forKey: "textColor")
+
+        // If using a dark background, also set background color (optional)
+        dateOfBirth.backgroundColor = .white
 
         genderSelection(gender: user.gender)
     }
 
+    enum Gender {
+        case Male, Female
+    }
+
+    var selectedGender: Gender?
+
     private func genderSelection(gender: String) {
-        let isMale = (gender == "Male")
+        if gender == "Male" {
+            selectedGender = .Male
+        } else if gender == "Female" {
+            selectedGender = .Female
+        }
+
+        updateGenderButtons()
+    }
+
+    private func updateGenderButtons() {
+        btnGenderMale.setImage(
+            UIImage(systemName: selectedGender == .Male ? "largecircle.fill.circle" : "circle"),
+            for: .normal
+        )
         
-        btnGenderMale.backgroundColor = isMale ? .blue : .clear
-        btnGenderMale.setTitleColor(isMale ? .white : .black, for: .normal)
-
-        btnGenderFemale.backgroundColor = isMale ? .clear : .blue
-        btnGenderFemale.setTitleColor(isMale ? .black : .white, for: .normal)
-
-        user?.gender = gender
-        print("🔄 Gender Selected: \(gender)")
+        btnGenderFemale.setImage(
+            UIImage(systemName: selectedGender == .Female ? "largecircle.fill.circle" : "circle"),
+            for: .normal
+        )
     }
 
     @IBAction func onGenderMaleClick(_ sender: UIButton) {
@@ -70,13 +92,14 @@ class SignupViewController: UIViewController {
         genderSelection(gender: "Female")
     }
 
+
     @IBAction func onSaveBtnClick(_ sender: UIButton) {
         guard let userEmail = email,
               let firstName = txtFirstname.text, !firstName.isEmpty,
               let lastName = txtLastname.text, !lastName.isEmpty,
               let gender = user?.gender, !gender.isEmpty
         else {
-            print("❌ Validation failed: Missing required fields")
+            print(" Validation failed: Missing required fields")
             showAlert(title: "Error", message: "Please fill all required fields.")
             return
         }
@@ -93,10 +116,10 @@ class SignupViewController: UIViewController {
                 self.btnSave.setTitle("Save", for: .normal)
 
                 if success {
-                    print("✅ User data updated successfully in database")
+                    print(" User data updated successfully in database")
                     self.showAlert(title: "Status", message: "Your data was saved successfully")
                 } else {
-                    print("❌ Failed to update user data")
+                    print(" Failed to update user data")
                     self.showAlert(title: "Error", message: "Failed to update user data.")
                 }
             }

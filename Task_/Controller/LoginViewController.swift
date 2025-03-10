@@ -17,7 +17,6 @@ class LoginViewController: UIViewController {
     }
     
     private func validateLogin() {
-        print("dhighih")
         guard let email = txtEmail.text, !email.isEmpty,
               let password = txtPassword.text, !password.isEmpty else {
             showError("Email and Password cannot be empty")
@@ -35,10 +34,11 @@ class LoginViewController: UIViewController {
         }
         
         txtError.isHidden = true
-        print("Login Successful for: \(email)")
+        print("Login Attempt for: \(email)")
 
         let user = UserModel(
-            userName: email, password: password,
+            userName: email,
+            password: password,
             softwareType: "AN",
             releaseVersion: "049",
             email: email,
@@ -50,41 +50,44 @@ class LoginViewController: UIViewController {
         )
 
         Task {
-            fetchData(user: user) { result in
-                switch result {
-                case .success(let responseData):
-                    print("✅ API Success: \(responseData)")
-                    DispatchQueue.main.async {
-                        let firstName = responseData.firstName ?? ""
-                        let lastName = responseData.lastName ?? ""
-                        let dob = responseData.dob ?? ""
-                        let gender = responseData.gender == 1 ? "Male" : "Female"
-                        let height = Double(responseData.heightCM ?? 0)
-                        print(firstName)
-                        print(lastName)
-                        print(dob)
-                        print(gender)
-                        print(height)
-                        print("dfnknkdfhkgkhkfhgkfhkg")
-
-                        // Store user data in SQLite
-                        if DatabaseHelper.shared.insertOrUpdateUser(email: email, password: password, firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dob, height: height) {
-                            print("✅ User data saved successfully in SQLite")
-                            UserDefaults.standard.set(email, forKey: "user_email")
-                            self.navigateToSignupScreen()
+             fetchData(user: user) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let responseData):
+                        print("API Success: \(responseData)")
+                        
+                        // Check if credentials are correct
+                        if responseData.email == email {
+                            self.handleSuccessfulLogin(responseData, email: email, password: password)
                         } else {
-                            print("❌ Failed to save user data in SQLite")
+                            self.showError("Invalid email or password")
                         }
 
-                    }
-
-                case .failure(let error):
-                    print("❌ API Failure: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        self.showError("Failed to fetch data: \(error.localizedDescription)")
+                    case .failure(let error):
+                        print("API Failure: \(error.localizedDescription)")
+                        self.showError("Invalid email or password")
                     }
                 }
             }
+        }
+    }
+    
+    private func handleSuccessfulLogin(_ responseData: Welcome, email: String, password: String) {
+        let firstName = responseData.firstName ?? ""
+        let lastName = responseData.lastName ?? ""
+        let dob = responseData.dob ?? ""
+        let gender = responseData.gender == 1 ? "Male" : "Female"
+        let height = Double(responseData.heightCM ?? 0)
+
+        print("User Details - Name: \(firstName) \(lastName), DOB: \(dob), Gender: \(gender), Height: \(height)")
+
+        // Store user data in SQLite
+        if DatabaseHelper.shared.insertOrUpdateUser(email: email, password: password, firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dob, height: height) {
+            print(" User data saved successfully in SQLite")
+            UserDefaults.standard.set(email, forKey: "user_email")
+            navigateToSignupScreen()
+        } else {
+            print(" Failed to save user data in SQLite")
         }
     }
 
@@ -93,7 +96,7 @@ class LoginViewController: UIViewController {
         if let signupVC = storyboard.instantiateViewController(withIdentifier: "SignupViewController") as? SignupViewController {
             self.navigationController?.pushViewController(signupVC, animated: true)
         } else {
-            print("❌ Failed to instantiate SignupViewController")
+            print(" Failed to instantiate SignupViewController")
         }
     }
 

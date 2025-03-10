@@ -16,10 +16,10 @@ final class DatabaseHelper {
         let dbPath = documentsDirectory.appendingPathComponent("hmBetaLogin.sqlite").path
 
         if sqlite3_open(dbPath, &db) == SQLITE_OK {
-            print("✅ Successfully opened database at \(dbPath)")
+            print("Successfully opened database at \(dbPath)")
             createTable()
         } else {
-            print("❌ Failed to open database: \(String(cString: sqlite3_errmsg(db)))")
+            print("Failed to open database: \(String(cString: sqlite3_errmsg(db)))")
         }
     }
 
@@ -41,12 +41,12 @@ final class DatabaseHelper {
         var statement: OpaquePointer?
         if sqlite3_prepare_v2(db, createTableQuery, -1, &statement, nil) == SQLITE_OK {
             if sqlite3_step(statement) == SQLITE_DONE {
-                print("✅ Table created successfully")
+                print(" Table created successfully")
             } else {
-                print("❌ Failed to create table: \(String(cString: sqlite3_errmsg(db)))")
+                print(" Failed to create table: \(String(cString: sqlite3_errmsg(db)))")
             }
         } else {
-            print("❌ Failed to prepare table creation statement: \(String(cString: sqlite3_errmsg(db)))")
+            print(" Failed to prepare table creation statement: \(String(cString: sqlite3_errmsg(db)))")
         }
         sqlite3_finalize(statement)
     }
@@ -64,7 +64,7 @@ final class DatabaseHelper {
                 exists = true
             }
         } else {
-            print("❌ Failed to prepare user check statement: \(String(cString: sqlite3_errmsg(db)))")
+            print(" Failed to prepare user check statement: \(String(cString: sqlite3_errmsg(db)))")
         }
         sqlite3_finalize(statement)
         return exists
@@ -73,12 +73,12 @@ final class DatabaseHelper {
     // MARK: - Insert or Update User
     func insertOrUpdateUser(email: String, password: String, firstName: String, lastName: String, gender: String, dateOfBirth: String, height: Double) -> Bool {
         if isUserExists(email: email) {
-            print("⚠️ User with email \(email) already exists. Updating details...")
+            print(" User with email \(email) already exists. Updating details...")
             let success = updateUser(email: email, firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dateOfBirth, height: height)
             if success {
-                print("✅ User updated successfully: \(email)")
+                print(" User updated successfully: \(email)")
             } else {
-                print("❌ Failed to update user")
+                print(" Failed to update user")
             }
             return success
         }
@@ -106,12 +106,12 @@ final class DatabaseHelper {
 
             if sqlite3_step(statement) == SQLITE_DONE {
                 success = true
-                print("✅ New user inserted successfully: \(email)")
+              
             } else {
-                print("❌ Failed to insert user: \(String(cString: sqlite3_errmsg(db)))")
+                print(" Failed to insert user: \(String(cString: sqlite3_errmsg(db)))")
             }
         } else {
-            print("❌ Failed to prepare insert statement: \(String(cString: sqlite3_errmsg(db)))")
+            print(" Failed to prepare insert statement: \(String(cString: sqlite3_errmsg(db)))")
         }
 
         sqlite3_finalize(statement)
@@ -150,7 +150,7 @@ final class DatabaseHelper {
                 )
             }
         } else {
-            print("❌ Failed to prepare fetch user statement: \(String(cString: sqlite3_errmsg(db)))")
+            print(" Failed to prepare fetch user statement: \(String(cString: sqlite3_errmsg(db)))")
         }
 
         sqlite3_finalize(statement)
@@ -181,10 +181,10 @@ final class DatabaseHelper {
             if sqlite3_step(statement) == SQLITE_DONE {
                 success = true
             } else {
-                print("❌ Failed to update user: \(String(cString: sqlite3_errmsg(db)))")
+                print(" Failed to update user: \(String(cString: sqlite3_errmsg(db)))")
             }
         } else {
-            print("❌ Failed to prepare update statement: \(String(cString: sqlite3_errmsg(db)))")
+            print(" Failed to prepare update statement: \(String(cString: sqlite3_errmsg(db)))")
         }
 
         sqlite3_finalize(statement)
