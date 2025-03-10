@@ -58,7 +58,7 @@ class LoginViewController: UIViewController {
             softwareType: "AN",  // Static Value
             releaseVersion: "049" // Static Value
         )
-        
+          //
         Task {
              fetchData(user: user) { result in
                 switch result {
