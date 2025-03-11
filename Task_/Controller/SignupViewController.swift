@@ -60,7 +60,11 @@ class SignupViewController: UIViewController {
         case Male, Female
     }
 
-    var selectedGender: Gender?
+    var selectedGender: Gender? {
+        didSet {
+            updateGenderButtons()
+        }
+    }
 
     private func genderSelection(gender: String) {
         if gender == "Male" {
@@ -68,8 +72,9 @@ class SignupViewController: UIViewController {
         } else if gender == "Female" {
             selectedGender = .Female
         }
-
-        updateGenderButtons()
+        
+        // Ensure user object is also updated
+        user?.gender = gender
     }
 
     private func updateGenderButtons() {
@@ -92,39 +97,59 @@ class SignupViewController: UIViewController {
         genderSelection(gender: "Female")
     }
 
-
+    
     @IBAction func onSaveBtnClick(_ sender: UIButton) {
-        guard let userEmail = email,
-              let firstName = txtFirstname.text, !firstName.isEmpty,
+        guard let userEmail = email else {
+            print("Validation failed: Missing email")
+            showAlert(title: "Error", message: "User email is missing.")
+            return
+        }
+        
+        guard let firstName = txtFirstname.text, !firstName.isEmpty,
               let lastName = txtLastname.text, !lastName.isEmpty,
-              let gender = user?.gender, !gender.isEmpty
-        else {
-            print(" Validation failed: Missing required fields")
+              let gender = selectedGender else {
+            print("Validation failed: Missing required fields")
             showAlert(title: "Error", message: "Please fill all required fields.")
             return
         }
 
         let height = Double(txtHeight.text ?? "0") ?? 0
-        let dobString = formatDateToString(dateOfBirth.date)
+        if height <= 0 {
+            print("Validation failed: Invalid height")
+            showAlert(title: "Error", message: "Please enter a valid height.")
+            return
+        }
 
+        let dobString = formatDateToString(dateOfBirth.date)
+        
+        btnSave.isEnabled = false
         btnSave.setTitle("Saving...", for: .normal)
 
         DispatchQueue.global(qos: .userInitiated).async {
-            let success = DatabaseHelper.shared.updateUser(email: userEmail, firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dobString, height: height)
+            let success = DatabaseHelper.shared.updateUser(
+                email: userEmail,
+                firstName: firstName,
+                lastName: lastName,
+                gender: gender == .Male ? "Male" : "Female",
+                dateOfBirth: dobString,
+                height: height
+            )
 
             DispatchQueue.main.async {
+                self.btnSave.isEnabled = true
                 self.btnSave.setTitle("Save", for: .normal)
 
                 if success {
-                    print(" User data updated successfully in database")
-                    self.showAlert(title: "Status", message: "Your data was saved successfully")
+                    print("User data updated successfully in database")
+                    self.showAlert(title: "Success", message: "Your data was saved successfully.")
                 } else {
-                    print(" Failed to update user data")
+                    print("Failed to update user data")
                     self.showAlert(title: "Error", message: "Failed to update user data.")
                 }
             }
         }
     }
+
 
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

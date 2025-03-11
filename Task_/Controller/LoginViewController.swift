@@ -80,7 +80,7 @@ class LoginViewController: UIViewController {
         let height = Double(responseData.heightCM ?? 0)
 
         print("User Details - Name: \(firstName) \(lastName), DOB: \(dob), Gender: \(gender), Height: \(height)")
-
+      
         // Store user data in SQLite
         if DatabaseHelper.shared.insertOrUpdateUser(email: email, password: password, firstName: firstName, lastName: lastName, gender: gender, dateOfBirth: dob, height: height) {
             print(" User data saved successfully in SQLite")
@@ -92,6 +92,7 @@ class LoginViewController: UIViewController {
     }
 
     private func navigateToSignupScreen() {
+        UserDefaults.standard.set(txtEmail.text, forKey: "email")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let signupVC = storyboard.instantiateViewController(withIdentifier: "SignupViewController") as? SignupViewController {
             self.navigationController?.pushViewController(signupVC, animated: true)

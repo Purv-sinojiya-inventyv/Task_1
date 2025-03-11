@@ -157,7 +157,6 @@ final class DatabaseHelper {
         return user
     }
 
-    // MARK: - Update User
     func updateUser(email: String, firstName: String, lastName: String, gender: String, dateOfBirth: String, height: Double) -> Bool {
         let updateQuery = """
             UPDATE Users SET first_name = ?, last_name = ?, gender = ?, date_of_birth = ?, height = ? WHERE email = ?;
@@ -165,28 +164,26 @@ final class DatabaseHelper {
         
         var statement: OpaquePointer?
         var success = false
-        let email = email.cString(using: .utf8)
-        let firstName = firstName.cString(using: .utf8)
-        let lastName = lastName.cString(using: .utf8)
-        let dateOfBirth = dateOfBirth.cString(using: .utf8)
-        let gender = gender.cString(using: .utf8)
+        
         if sqlite3_prepare_v2(db, updateQuery, -1, &statement, nil) == SQLITE_OK {
-            sqlite3_bind_text(statement, 1, firstName, -1, nil)
-            sqlite3_bind_text(statement, 2, lastName, -1, nil)
-            sqlite3_bind_text(statement, 3, gender, -1, nil)
-            sqlite3_bind_text(statement, 4, dateOfBirth, -1, nil)
+            // ✅ Fix: Directly bind Swift String (converted to NSString)
+            sqlite3_bind_text(statement, 1, (firstName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 2, (lastName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 3, (gender as NSString).utf8String, -1, nil)  // ✅ Gender binding fixed
+            sqlite3_bind_text(statement, 4, (dateOfBirth as NSString).utf8String, -1, nil)
             sqlite3_bind_double(statement, 5, height)
-            sqlite3_bind_text(statement, 6, email, -1, nil)
-
+            sqlite3_bind_text(statement, 6, (email as NSString).utf8String, -1, nil)
+            
             if sqlite3_step(statement) == SQLITE_DONE {
                 success = true
+                print("User updated successfully")
             } else {
                 print(" Failed to update user: \(String(cString: sqlite3_errmsg(db)))")
             }
         } else {
             print(" Failed to prepare update statement: \(String(cString: sqlite3_errmsg(db)))")
         }
-
+        
         sqlite3_finalize(statement)
         return success
     }
